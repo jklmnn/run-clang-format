@@ -130,7 +130,10 @@ def run_clang_format_diff(args, file):
             original = f.readlines()
     except IOError as exc:
         raise DiffError(str(exc))
-    invocation = [args.clang_format_executable, file]
+    if args.style:
+        invocation = [args.clang_format_executable, '--style=' + args.style, file]
+    else:
+        invocation = [args.clang_format_executable, file]
 
     # Use of utf-8 to decode the process output.
     #
@@ -278,6 +281,10 @@ def main():
         default=[],
         help='exclude paths matching the given glob-like pattern(s)'
         ' from recursive search')
+    parser.add_argument(
+        '-s',
+        '--style',
+        help='select clang formatting style')
 
     args = parser.parse_args()
 
